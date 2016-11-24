@@ -12,7 +12,7 @@ I5 = imread('93.png');
 I6 = imread('103.png');
 I7 = imread('113.png');
 
-%% frame rate 1 เอาไว้หาจำนวนลูกน้ำ และประมวลผลภาพ
+%% frame rate 1 �������Ҩӹǹ�١��� ��л����ż��Ҿ
 I8 = imread('54.png');
 I9 = imread('55.png');
 I10 = imread('56.png');
