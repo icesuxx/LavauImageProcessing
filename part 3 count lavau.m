@@ -2,8 +2,7 @@ clear all
 close all
 clc
 
-%% frame rate 10 เอาไว้หา median เพราะถ้าเอา famerate ต่ำๆมาหาจะเกิด noise เยอะ
-tic
+%% frame rate 10 �������� median ���ж����� famerate �������Ҩ��Դ noise ����
 I1 = imread('53.png');
 I2 = imread('63.png');
 I3 = imread('73.png');
@@ -12,7 +11,7 @@ I5 = imread('93.png');
 I6 = imread('103.png');
 I7 = imread('113.png');
 
-%% frame rate 1 �������Ҩӹǹ�١��� ��л����ż��Ҿ
+%% frame rate 1 �������Ҩӹǹ�١��� ��л����ż��Ҿ
 I8 = imread('54.png');
 I9 = imread('55.png');
 I10 = imread('56.png');
@@ -21,7 +20,7 @@ I12 = imread('58.png');
 I13 = imread('59.png');
 I14 = imread('60.png');
 
-%%ทำภาพที่ import มาให้เป็น gray scale
+%%���Ҿ��� import ������� gray scale
 GrayI1 = rgb2gray(I1);
 GrayI2 = rgb2gray(I2);
 GrayI3 = rgb2gray(I3);
@@ -38,13 +37,13 @@ GrayI12 = rgb2gray(I12);
 GrayI13 = rgb2gray(I13);
 GrayI14 = rgb2gray(I14);
 
-edge = 50; %ค่าขอบภาพ
+edge = 50; %��Ңͺ�Ҿ
 
 a = 1;
 
 [MatrixRow, MatrixCol] = size(GrayI1);
 
-%% trip image (cut edge) ทำทั้งหมด 14 รูปเลย
+%% trip image (cut edge) �ӷ����� 14 �ٻ���
 
 for i = 1:14
     
@@ -52,9 +51,9 @@ for i = 1:14
     
     output = ['DoubleGrayI' int2str(i) '=DoubleGrayImage'];
     eval(output);
-    %เอาแค่ตัวรูปข้างในถัดจาก edge เข้าไป
+    %��������ٻ��ҧ㹶Ѵ�ҡ edge ����
     InsideMatrix = DoubleGrayImage(edge+1:MatrixRow-(edge+1),...
-        edge+1:MatrixCol-(edge+1)); %แบ่งรูปจากเมตริก Gmag
+        edge+1:MatrixCol-(edge+1));  %���ٻ�ҡ����ԡ Gmag
     output2 = ['InsideMatrixI' int2str(i) '=InsideMatrix'];
     eval(output2);
     
@@ -69,36 +68,36 @@ end
 % 3.find FirstThreshold (Mean and Max 2.)
 % 4.vary = 0.75
 
-%เอาเมตริกซ์มาวางซ้อนๆกันไว้
+%�������ԡ�����ҧ��͹�ѹ���
 z = cat(3,InsideMatrixI1...
     ,InsideMatrixI2,InsideMatrixI3,InsideMatrixI4,InsideMatrixI5,InsideMatrixI6,InsideMatrixI7);
 
 DoubleZ = mat2gray(z);
 
-%หาค่า median ของรูป 10 framrate ทุกรูปที่วางซ้อนทับไว้ เรียกว่ารูป background
+%�Ҥ�� median �ͧ�ٻ 10 framrate �ء�ٻ����ҧ��͹�Ѻ��� ���¡����ٻ background
 BackgroundIm = median(DoubleZ,3);
 
 for j = 1:14
     
-	%เอารุป 1 framrateทุกๆรูปมาลบกับรูป background แล้วจะได้รูปใหม่ที่มีแต่ลูกน้ำ หรือสิ่งที่เคลื่อนไหว
+	%����ػ 1 framrate�ء��ٻ��ź�Ѻ�ٻ background ���Ǩ����ٻ�����������١��� ������觷������͹���
     BgDivideInsideMatrix =  abs(eval(['GrayInsideMatrix' int2str(j)])-BackgroundIm);
     output4 = ['BgDivideInsideMatrix' int2str(j) '=BgDivideInsideMatrix'];
     eval(output4);
     
-	%หาค่า mean ของรูปใหม่หลังบลกับ background
+	%�Ҥ�� mean �ͧ�ٻ������ѧ�šѺ background
     MeanInsideMatrix = mean2(eval(['BgDivideInsideMatrix' int2str(j)]));
     output5 = ['MeanInsideMatrix' int2str(j) '=MeanInsideMatrix'];
     eval(output5);
     
-	%หาค่า max ของ pixel จากรูปที่ลบ background แล้ว หรือค่าสีที่สว่างที่สุด
+	%�Ҥ�� max �ͧ pixel �ҡ�ٻ���ź background ���� ���ͤ���շ�����ҧ����ش
     [MaxInsideMatrix, Location] = max(eval(['BgDivideInsideMatrix' int2str(j)]));
     output5 = ['MaxInsideMatrix' int2str(j) '=MaxInsideMatrix'];
     eval(output5);
     
-	%กำหนดค่านี้เองว่าให้แวรี่ = 0.7
+	%��˹���ҹ���ͧ����������� = 0.7
     vary = 0.7;
     
-	%FirstThreshold เกิดจากสูตร  ((vary*MeanInsideMatrix)+(1-vary)*MeanInsideMatrix))
+	%FirstThreshold �Դ�ҡ�ٵ�  ((vary*MeanInsideMatrix)+(1-vary)*MeanInsideMatrix))
 	FirstThreshold = (vary*(eval(['MeanInsideMatrix' int2str(j)])))+((1-vary)*(eval(['MaxInsideMatrix' int2str(j)])));
     output6 = ['FirstThreshold' int2str(j) '=FirstThreshold'];
     eval(output6);
@@ -111,15 +110,15 @@ end
 
 [RowInsideMatrix, ColInsideMatrix] = size(BgDivideInsideMatrix1);
 
-%สร้างเมตริก 1 ที่มีขนาดเท่ากับรูปหลังลบ bachground ไว้ใส่ข้อมูล
+%���ҧ����ԡ 1 ����բ�Ҵ��ҡѺ�ٻ��ѧź bachground �����������
 MatrixTrans = ones(RowInsideMatrix,ColInsideMatrix);
 
 for k = 1:14
     aaa = eval(['BgDivideInsideMatrix' int2str(k)]);
     for c = 1:numel(aaa)
-        if aaa(c) > eval(['FirstThreshold' int2str(k)]) %ถ้าค่าใน pixel นั้นมากกว่า FirstThreshold ให้มีค่าเปน 255 หรือสีขาว
+        if aaa(c) > eval(['FirstThreshold' int2str(k)])%��Ҥ��� pixel ����ҡ���� FirstThreshold ����դ��໹ 255 �����բ��
             MatrixTrans(c) = 255;
-        else  %ถ้าค่าใน pixel นั้นน้อยกว่า FirstThreshold ให้มีค่าเปน 0 หรือสีดำ
+        else  %��Ҥ��� pixel ��鹹��¡��� FirstThreshold ����դ��໹ 0 �����մ�
             MatrixTrans(c) = 0;
         end
     end
@@ -157,15 +156,15 @@ figure, imagesc(BackgroundIm);colormap(gray);axis off,axis image;
 
 %% find BlackWhiteMatrixDetail :
 
-for n = 8:14 %เอาเฉพาะรูปที่ framerate 1 มาหาจำนนลูกน้ำ
+for n = 8:14 %���੾���ٻ��� framerate 1 ���Ҩӹ��١���
     
-    BlackWhiteMatrixDetail = bwconncomp(eval(['BlackWhiteMatrix' int2str(n)])); %bwconncomp คือคำสั่งเฉพาะของ MATLAB connectivity,ImageSize,NumObjects,PixelIdxList
+    BlackWhiteMatrixDetail = bwconncomp(eval(['BlackWhiteMatrix' int2str(n)])); %bwconncomp �?ือ�?ำสั�?�?เ�?�?าะ�?อ�? MATLAB connectivity,ImageSize,NumObjects,PixelIdxList
     output9 = ['BlackWhiteMatrixDetail' int2str(n) '=BlackWhiteMatrixDetail'];
     eval(output9);
     
 end
 
-%บอกจำนวน object ในแต่ละรูป
+%�͡�ӹǹ object ������ٻ
 NumOfObject8 = BlackWhiteMatrixDetail8.NumObjects;
 NumOfObject9 = BlackWhiteMatrixDetail9.NumObjects;
 NumOfObject10 = BlackWhiteMatrixDetail10.NumObjects;
@@ -182,7 +181,7 @@ for m = 8:14
     output10 = ['BW' int2str(m) '=BW'];
     eval(output10);
     
-    StatsBW = regionprops(eval(['BW' int2str(m)])); %regionprops คือคำสั่งเฉพาะของ MATALB บอกค่า Area, Centroid, BoundingBox
+    StatsBW = regionprops(eval(['BW' int2str(m)])); %regionprops ��ͤ����੾�Тͧ MATALB �͡��� Area, Centroid, BoundingBox
     output11 = ['StatsBW' int2str(m) '=StatsBW'];
     eval(output11);
     
@@ -190,25 +189,25 @@ for m = 8:14
     output12 = ['StatsNotBW' int2str(m) '=StatsNotBW'];
     eval(output12);
 end
-%% ภาพที่ 1 : 54
-for l8 = 1:NumOfObject8 %วนไปทุก object ในรูปที่54
+%% �Ҿ��� 1 : 54
+for l8 = 1:NumOfObject8 %ǹ价ء object ��ٻ���54
     
-    [WhiteObjectSize8, nan] = size(cell2mat(BlackWhiteMatrixDetail8.PixelIdxList(l8))); %เมตริกเก็บขนาดของแต่ละ object
+    [WhiteObjectSize8, nan] = size(cell2mat(BlackWhiteMatrixDetail8.PixelIdxList(l8))); %����ԡ�红�Ҵ�ͧ���� object
     
     WhiteObject8(l8) = WhiteObjectSize8;
     
-    SortWhiteObject8 = sort(WhiteObject8); %เรียงจากขนาดน้อยไปมาก///
+    SortWhiteObject8 = sort(WhiteObject8); %���§�ҡ��Ҵ������ҡ///
     
-    MeanSizeOfObject8 = mean(WhiteObject8); %หาค่า mean ของขนาด object///
+    MeanSizeOfObject8 = mean(WhiteObject8); %�Ҥ�� mean �ͧ��Ҵ object///
     
-    SdSizeOfObject8 = std(WhiteObject8); % หาค่า standard deviation ของขนาด object///
+    SdSizeOfObject8 = std(WhiteObject8); % �Ҥ�� standard deviation �ͧ��Ҵ object///
     
     [Nan1, NumWhiteObject8] = size(find(WhiteObject8));
     
-    MinimunSizeMatrix8 = find(WhiteObject8 < 22); %pixel สีขาวติดกันอย่างน้อย 22 pixel
-    MaximunSizeMatrix8 = find(WhiteObject8 > 134); %pixel สีขาวติดกันอย่างมาก 134 pixel
+    MinimunSizeMatrix8 = find(WhiteObject8 < 22); %pixel �բ�ǵԴ�ѹ���ҧ���� 22 pixel
+    MaximunSizeMatrix8 = find(WhiteObject8 > 134); %pixel �բ�ǵԴ�ѹ���ҧ�ҡ 134 pixel
     
-    FindWhiteObject8 = find(WhiteObject8>22 & WhiteObject8<134); %กรองขนาดของ object
+    FindWhiteObject8 = find(WhiteObject8>22 & WhiteObject8<134); %��ͧ��Ҵ�ͧ object
     
     [Nan2, HalfMeanSizeOfObject8]= size(MinimunSizeMatrix8); 
     [Nan3, MeanPlusSdSizeOfObject8]= size(MaximunSizeMatrix8);
@@ -216,7 +215,7 @@ for l8 = 1:NumOfObject8 %วนไปทุก object ในรูปที่54
     MinimumWhiteObject8 = NumWhiteObject8 - HalfMeanSizeOfObject8;
     MaximumWhiteObject8 = NumWhiteObject8 - MeanPlusSdSizeOfObject8;
     
-    NumOfLuava8 = (MinimumWhiteObject8 + MaximumWhiteObject8) - NumWhiteObject8; %บอกจำนวนลูกนำในรูปนั้น
+    NumOfLuava8 = (MinimumWhiteObject8 + MaximumWhiteObject8) - NumWhiteObject8; %�͡�ӹǹ�١����ٻ���
     
     l8 = l8+1;
 end
@@ -260,7 +259,7 @@ figure, gscatter(Occupancy1,Aspect1,Class1,'rgb','osd'),axis([0 1.5 0 1.5]);
 xlabel('Occupancy');
 ylabel('Aspect');
 
-%% ภาพที่ 2 : 55
+%% ภา�?ที�? 2 : 55
 for l9 = 1:NumOfObject9
     
     [WhiteObjectSize9, nan] = size(cell2mat(BlackWhiteMatrixDetail9.PixelIdxList(l9)));
@@ -329,7 +328,7 @@ hold on;
 figure, gscatter(Occupancy2,Aspect2,Class2,'rgb','osd'),axis([0 1.5 0 1.5]);
 xlabel('Occupancy');
 ylabel('Aspect');
-%% ภาพที่ 3 : 56
+%% ภา�?ที�? 3 : 56
 for l10 = 1:NumOfObject10
     
     [WhiteObjectSize10, nan] = size(cell2mat(BlackWhiteMatrixDetail10.PixelIdxList(l10)));
@@ -398,7 +397,7 @@ hold on;
 figure, gscatter(Occupancy3,Aspect3,Class3,'rgb','osd'),axis([0 1.5 0 1.5]);
 xlabel('Occupancy');
 ylabel('Aspect');
-%% ภาพที่ 4 : 57
+%% ภา�?ที�? 4 : 57
 for l11 = 1:NumOfObject11
     
     [WhiteObjectSize11, nan] = size(cell2mat(BlackWhiteMatrixDetail11.PixelIdxList(l11)));
@@ -467,7 +466,7 @@ hold on;
 figure, gscatter(Occupancy4,Aspect4,Class4,'rgb','osd'),axis([0 1.5 0 1.5]);
 xlabel('Occupancy');
 ylabel('Aspect');
-%% ภาพที่ 5 : 58
+%% ภา�?ที�? 5 : 58
 for l12 = 1:NumOfObject12
     
     [WhiteObjectSize12, nan] = size(cell2mat(BlackWhiteMatrixDetail12.PixelIdxList(l12)));
@@ -536,7 +535,7 @@ hold on;
 figure, gscatter(Occupancy5,Aspect5,Class5,'rgb','osd'),axis([0 1.5 0 1.5]);
 xlabel('Occupancy');
 ylabel('Aspect');
-%% ภาพที่ 6 : 59
+%% ภา�?ที�? 6 : 59
 for l13 = 1:NumOfObject13
     
     [WhiteObjectSize13, nan] = size(cell2mat(BlackWhiteMatrixDetail13.PixelIdxList(l13)));
@@ -606,7 +605,7 @@ figure, gscatter(Occupancy6,Aspect6,Class6,'rgb','osd'),axis([0 1.5 0 1.5]);
 xlabel('Occupancy');
 ylabel('Aspect');
 
-%% ภาพที่ 7 : 60
+%% ภา�?ที�? 7 : 60
 for l14 = 1:NumOfObject14
     
     [WhiteObjectSize14, nan] = size(cell2mat(BlackWhiteMatrixDetail14.PixelIdxList(l14)));
